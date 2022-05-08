@@ -1,7 +1,9 @@
-const express     = require("express");
-const cors        = require("cors");
-const bodyParser  = require("body-parser");
-const { spawn }   = require("child_process");
+const express           = require("express");
+const cors              = require("cors");
+const bodyParser        = require("body-parser");
+const { spawn }         = require("child_process");
+const { VM, VMScript }  = require("vm2");
+const { json }          = require("express/lib/response");
 
 
 const app = express();
@@ -40,6 +42,24 @@ app.post("/python", (req, res) => {
     });
   } catch (err) {
     res.status(400).json({ msg: err }).send();
+  }
+});
+
+app.post("/javascript", (req, res) => {
+  try {
+    const vm = new VM();
+
+    var { code } = req.body;
+
+    new VMScript(code).compile();
+
+    const script = new VMScript(code);
+
+    const output = vm.run(script);
+
+    res.status(200).json({ msg: output }).send();
+  } catch (err) {
+    res.status(400).json({ msg: err.stack }).send();
   }
 });
 
