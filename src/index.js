@@ -1,23 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { BrowserRouter as Router } from "react-router-dom";
-import App from "./App";
-import "./tailwind.css";
+import { app } from "./api";
+import dotenv from "dotenv";
 
-//redux
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "./redux/store";
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config();
+}
 
-ReactDOM.render(
-  <Provider store={store}>
-    <PersistGate persistor={persistor}>
-      <Router>
-        <React.StrictMode>
-          <App />
-        </React.StrictMode>
-      </Router>
-    </PersistGate>
-  </Provider>,
-  document.getElementById("root")
-);
+// start server
+const Port = process.env.PORT || 3333;
+
+app.listen(Port, () => console.log(`Api is avaialbe on port ${Port}`));
